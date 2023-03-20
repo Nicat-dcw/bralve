@@ -30,7 +30,7 @@ class RequestClient {
           response += chunk;
         });
         res.on('end', () => {
-          resolve(JSON.parse(response));
+          resolve(JSON.parse(response)); //JSON.parse
         });
       });
 
@@ -45,6 +45,45 @@ class RequestClient {
       req.end();
     });
   }
+ 
+  hRequest() {
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: this.config.method,
+        headers: this.config.headers || {}
+      };
+
+      let data = this.config.body;
+      if (data) {
+        if (typeof data !== 'string') {
+          data = JSON.stringify(data);
+        }
+        options.headers['Content-Length'] = Buffer.byteLength(data);
+      }
+
+      const req = http.request(this.config.url, options, (res) => {
+        let response = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          response += chunk;
+        });
+        res.on('end', () => {
+          resolve(JSON.stringify(response)); //JSON.parse
+        });
+      });
+
+      req.on('error', (error) => {
+        reject(error);
+      });
+
+      if (data) {
+        req.write(data);
+      }
+
+      req.end();
+    });
+  }
+   
   options(){
     this.config.method = "OPTIONS"
     return this.request();
@@ -68,7 +107,7 @@ class RequestClient {
     this.config.headers = {
       'Content-Type': 'application/json'
     };
-    return this.request();
+    return this.hRequest();
   }
  
   put(data) {

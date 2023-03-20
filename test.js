@@ -5,7 +5,7 @@ const request = new RequestClient({
   url: 'http://discord.com/api/v9/users/',
   method: 'GET'
 });
-request.request().then((x) => console.log(x))
+request.head().then((x) => console.log(x))
 /*
 requestGet.get().then(function(response) {
   console.log('GET isteği\n', response);
