@@ -60,6 +60,9 @@ web_modules/
 
 # Optional stylelint cache
 .stylelintcache
+# Replit 
+replit.nix
+.replit 
 
 # Microbundle cache
 .rpt2_cache/
