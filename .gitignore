@@ -61,6 +61,7 @@ web_modules/
 # Optional stylelint cache
 .stylelintcache
 # Replit 
+
 replit.nix
 .replit 
 
