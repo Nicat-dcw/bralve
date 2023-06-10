@@ -1,6 +1,6 @@
 {
   "name": "@nicat.dcw/bralve",
-  "version": "1.0.0-renew",
+  "version": "2.0.0",
   "description": "Simple HTTP/HTTPS Request Package for NodeJS.",
   "main": "./src/index.js",
   "type": "module",
@@ -19,7 +19,15 @@
   ],
   "author": "Nicat.dcw",
   "homepage": "https://nicat-dcw.me",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+     "type":"git",
+     "url":"https://github.com/Nicat-dcw/bralve"
+  }
+  "funding": {
+    "type":"individual",
+    "url":"https://github.com/Nicat-dcw/bralve"
+  },
   "dependencies": {
     "@types/node": "^18.0.6",
     "colorette": "^2.0.19",
