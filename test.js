@@ -2,7 +2,7 @@ import Bralve from './src/index.js';
 
 // Create an instance of the Request class
 const request = new Bralve();
-
+request.on("request", (e) => console.log("Res", e))
 // Test HTTP GET request
 request.get('http://jsonplaceholder.typicode.com/posts/1')
   .then(response => {

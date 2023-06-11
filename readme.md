@@ -2,6 +2,11 @@
 # Bralve HTTP Request Module
 
 The Bralve HTTP Request Module is a lightweight module for making HTTP and HTTPS requests in Node.js using the XMLHttpRequest API. It provides a simple and intuitive interface for making GET, POST, PATCH, PUT, and DELETE requests.
+## Updates (06/11/2023)
+- Added `Types` Support
+- Added `CommonJS` Support
+- Added `Event` Support
+- Some Performance Updates
 
 ## Installation
 
@@ -23,6 +28,13 @@ import Bralve from '@nicat.dcw/bralve';
 
 // Create an instance of the Request class
 const request = new Bralve();
+
+request.on("request", (res) => {
+ console.log(res)
+/* => 
+{ type:"succeedRequest", requestresponse }
+*/
+})
 
 // Make an HTTP GET request
 request.get('http://jsonplaceholder.typicode.com/posts/1')
@@ -95,7 +107,14 @@ Sends an HTTP HEAD request to the specified URL.
 
 - `url` (string): The URL to send the request to.
 - `config` (optional, object): Additional configuration options for the request.
-  
+
+#### `on(event, fallback)`
+
+Shows emitted events data
+
+- `event` (string): The name of event. [request,error]
+- `fallback` (fallback, object): returns of result
+    
 ## License
 
 This module is licensed under the [MIT License](https://github.com/Nicat-dcw/bralve).

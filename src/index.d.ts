@@ -1,3 +1,6 @@
+import { createRequire } from 'module';
+import KiwiEmitter from "@smootie/emitter";
+const require = createRequire(import.meta.url);
 import http from 'http';
 import https from 'https';
 import url from 'url';
@@ -5,7 +8,7 @@ import url from 'url';
 interface BralveConfig {
   url: string;
   method?: string;
-  headers?: { [key: string]: string };
+  headers?: Record<string, string>;
   data?: string;
 }
 
@@ -17,8 +20,8 @@ interface BralveResponse {
   headers: http.IncomingHttpHeaders;
 }
 
-class Bralve {
-  private makeRequest(config: BralveConfig): Promise<BralveResponse> {
+class Bralve extends KiwiEmitter {
+  makeRequest(config: BralveConfig): Promise<BralveResponse> {
     const { protocol, hostname, port, path } = url.parse(config.url);
     const protocolModule = protocol === 'https:' ? https : http;
 
@@ -45,16 +48,19 @@ class Bralve {
         res.on('end', () => {
           const response: BralveResponse = {
             data: responseData,
-            status: res.statusCode as number,
+            status: res.statusCode!,
             bralveConfig: config,
-            statusText: res.statusMessage as string,
+            statusText: res.statusMessage!,
             headers: res.headers
           };
+          this.emit("request", { type:"succeedRequest", ...response});
           resolve(response);
         });
       });
 
       req.on('error', error => {
+        this.emit("request", { type:"error", ...error});
+        this.emit("error", error);
         reject(error);
       });
 
@@ -66,27 +72,27 @@ class Bralve {
     });
   }
 
-  public get(url: string, config?: BralveConfig): Promise<BralveResponse> {
+  get(url: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'GET', url });
   }
 
-  public post(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
+  post(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'POST', url, data });
   }
 
-  public patch(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
+  patch(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'PATCH', url, data });
   }
 
-  public put(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
+  put(url: string, data: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'PUT', url, data });
   }
 
-  public delete(url: string, config?: BralveConfig): Promise<BralveResponse> {
+  delete(url: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'DELETE', url });
   }
 
-  public head(url: string, config?: BralveConfig): Promise<BralveResponse> {
+  head(url: string, config?: BralveConfig): Promise<BralveResponse> {
     return this.makeRequest({ ...config, method: 'HEAD', url });
   }
 }

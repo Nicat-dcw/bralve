@@ -1,10 +1,11 @@
-import { createRequire } from 'module';
-import KiwiEmitter from "@smootie/emitter";
-const require = createRequire(import.meta.url)
-import http from 'http';
-import https from 'https';
-import url from 'url';
+const { createRequire } = require('module');
+const KiwiEmitter = require('@smootie/emitter');
+const http = require('http');
+const https = require('https');
+const url = require('url');
 
+const requireFunc = createRequire(import.meta.url);
+const require = requireFunc.bind(requireFunc);
 
 class Bralve extends KiwiEmitter {
   makeRequest(config) {
@@ -16,8 +17,7 @@ class Bralve extends KiwiEmitter {
       headers: {
         ...config.headers,
         'x-powered-by': 'Bralve By Nicat-dcw.',
-        'x-request-date': Date.now(),
-        'Host': hostname
+        'x-request-date': Date.now()
       },
       hostname,
       port,
@@ -78,9 +78,10 @@ class Bralve extends KiwiEmitter {
   delete(url, config) {
     return this.makeRequest({ ...config, method: 'DELETE', url });
   }
+  
   head(url, config) {
     return this.makeRequest({ ...config, method: 'HEAD', url });
   }
 }
 
-export default Bralve;
+module.exports = Bralve;
